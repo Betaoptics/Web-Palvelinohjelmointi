@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>HarjoitusKT 4-2</title>
+</head>
+    <body>
+    
+        <h3 style=background-color:#fed;color:#000>Autolaskuri</h3>
+           <!--
+             Oleellista on pitää yllä _samassa_ lomakkeessa
+             kaikkien autojen kertymiä
+           -->
+
+<?php
+
+ session_start();
+            
+$brand = array("VW", "Opel", "Toyota");
+             
+function __autoload($Car) {
+    require_once $Car . '.class.php';
+}
+
+echo "<p>[";
+foreach($brand as $item) {
+    echo "<a href='h4t1-autolaskuri.oop.php?car={$item}'> {$item}</a> |";
+}
+echo "<a href='h4t1-autolaskuri.oop.php?car=nollaa''>Nollaa</a>]</p>";
+
+?>
+
+<p>[ <a href='h4t1-autolaskuri.oop.php?car=VW'>VW</a> |
+<a href='h4t1-autolaskuri.oop.php?car=Opel'>Opel</a> |
+<a href='h4t1-autolaskuri.oop.php?car=Toyota'>Toyota</a> |
+<a href='h4t1-autolaskuri.oop.php?car=Nollaa'>Nollaa</a>]</p>
+        
+<table>
+<?php         
+            
+foreach($brand as $b) {
+    $car = 0;
+    if(isset($_SESSION[$b])) {
+        $obj = unserialize($_SESSION[$b]);
+        $car = $obj->Count();
+    }
+    echo "<tr><td>{$b}</td><td>{$car} kpl</td>";
+}
+?>
+    
+<tr><td>VW</td><td>0 kpl</td>
+<tr><td>Opel</td><td>0 kpl</td>
+<tr><td>Toyota</td><td>0 kpl</td>
+    
+</table>
+    
+    </body>
+</html>

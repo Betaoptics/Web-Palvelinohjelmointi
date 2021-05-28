@@ -1,0 +1,57 @@
+/*
+|--------------------------------------------------------------------------
+| routes/web.php
+|--------------------------------------------------------------------------
+*/
+...
+Route::get('/metahakupalvelu', 'CustomerController@searchForm');
+Route::post('/metahakupalvelu', 'CustomerController@search');
+
+/*
+|--------------------------------------------------------------------------
+| app/Http/Controllers/CustomerController.php
+|--------------------------------------------------------------------------
+*/
+    public function searchForm() {
+        return view('/metahaku');
+    }
+
+    public function search() {
+        $searchTerm = urlencode(request('searchTerm'));
+        $service = request('service');
+        $url = "";
+        switch($service) {
+            case "google":
+            $url = "https://www.google.com/search?q={$searchTerm}";
+            break;
+            case "bing":
+            $url = "https://www.bing.com/search?q={$searchTerm}";
+            break;
+        }
+        return redirect($url);
+    }
+
+
+/*
+|--------------------------------------------------------------------------
+| resources/views/metahaku.blade.php
+|--------------------------------------------------------------------------
+*/
+<html>
+    <head>
+        <title>Metahakupalvelu</title>
+    </head>
+    <body>
+        <h2>{{ $url ?? '' }}</h2>
+        <form method="POST" action="{{ url('/') }}/metahakupalvelu">
+            {{ csrf_field() }}
+            <h1>Metahakupalvelu</h1>
+            <input type="text" name="searchTerm">
+            <button type="submit">Etsi</button>
+            <select name="service">
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+            </select>
+        </form>
+    </body>
+</html>

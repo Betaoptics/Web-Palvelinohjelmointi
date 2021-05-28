@@ -1,0 +1,62 @@
+/* VAIHE 1
+|--------------------------------------------------------------------------
+| resources/views/metahaku.blade.php
+|--------------------------------------------------------------------------
+*/
+<input type="text" name="searchTerm" pattern="[a-zA-Z0-9]{5,30}">
+
+/* VAIHE 2
+|--------------------------------------------------------------------------
+| resources/views/metahaku.blade.php
+|--------------------------------------------------------------------------
+*/
+<html>
+    <head>
+        <title>Metahakupalvelu</title>
+    </head>
+    <body>
+        <h2>{{ $url ?? '' }}</h2>
+        <form method="POST" action="{{ url('/') }}/metahakupalvelu">
+            {{ csrf_field() }}
+            <h1>Metahakupalvelu</h1>
+            <input type="text" name="searchTerm" {!! $errors->has('searchTerm') ? 'style="background-color: #faa"' : ''!!} value="{{old('searchTerm')}}" pattern="[a-zA-Z0-9]{5,30}">
+            <button type="submit">Etsi</button>
+            <select name="service">
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+            </select><br>
+            @if ($errors->any())
+                <div style='background-color: #faa;'>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li> {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </form>
+    </body>
+</html>
+/*
+|--------------------------------------------------------------------------
+| app/Http/Controllers/CustomerController.php
+|--------------------------------------------------------------------------
+*/
+	request()->validate([
+            'searchTerm' => ['required', 'regex:/^[a-zA-Z]{5,30}$/']
+        ],
+        ['searchTerm.regex' => 'Laravel: Vain [a-zA-Z]{5,30} ok']
+        );
+
+/* VAIHE 3
+|--------------------------------------------------------------------------
+| app/Http/Controllers/CustomerController.php
+|--------------------------------------------------------------------------
+*/
+        request()->validate([
+            'searchTerm' => ['required', 'regex:/^[a-zA-Z]{5,30}$/'],
+            'service' => 'regex:/google$/'
+        ],
+        ['searchTerm.regex' => 'Laravel: Vain [a-zA-Z]{5,30} ok',
+        'service.regex' => 'Bing poissa käytöstä, valitse Google!']
+        );
